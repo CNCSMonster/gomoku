@@ -220,19 +220,17 @@ function play(x,y){
         isAbled=true;
         checkWinner()
     };
-    // 创建一个函数闭包
-    function getTaskClosure(passPos,xhr){
-        f=()=>{
-            xhr.send(JSON.stringify(passPos))
-        }
-        return f
+    // 创建一个函数用来执行任务
+    f=function(xhr=xhr,pos=pos){
+        xhr.send(JSON.stringify(pos))
     }
-    let internalTask=getTaskClosure(pos,xhr)    //定义块局变量
     // 发送请求
-    let playinterVal=setInterval(() => {
-        if(!isAbled) return;
-        internalTask()
-        clearInterval(playinterVal);
+    setTimeout(() => {
+        if(!isAbled){
+            setTimeout(f,100);
+            return
+        }
+        f()
     }, 100);
     
 }
@@ -248,13 +246,17 @@ function fetchBoardCase(){
         }
         isAbled=true;
     };
-    let internalTask=(xhr=xhr,pos=pos)=>{
-        xhr.send(JSON.stringify(pos))
+    // 创建一个函数用来执行任务
+    f=function(xhr=xhr){
+        xhr.send()
     }
-    let playinterVal=setInterval(() => {
-        if(!isAbled) return;
-        internalTask()
-        clearInterval(playinterVal);
+    // 发送请求
+    setTimeout(() => {
+        if(!isAbled){
+            setTimeout(f,100);
+            return
+        }
+        f()
     }, 100);
 }
 
