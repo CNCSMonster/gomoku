@@ -89,6 +89,7 @@ document.addEventListener("DOMContentLoaded",()=>{
         refreshUI();
     }, 300);
     setInterval(() => {
+        if(gameId<0) return;
         fetchBoardCase();
         checkWinner();
     }, 500);
@@ -246,7 +247,7 @@ function fetchBoardCase(){
         if (xhr.status === 200) {
             boardCase = JSON.parse(xhr.responseText); // 解析服务器返回的json字符串
         } else {
-            console.error('请求失败，状态码为：' + xhr.status);
+            console.log('请求失败，状态码为：' + xhr.status);
         }
         isAbled=true;
     };
