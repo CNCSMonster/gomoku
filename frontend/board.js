@@ -5,8 +5,8 @@ let player1ID=""
 let gameId=-1;  //gameid是向服务器发送请求后得到的id,用-1表示游戏还没开始
 let player1Password;
 let =document.querySelector(".invite-button");
-// let serverID="43.136.17.142"
-let serverID="localhost"
+let serverID="43.136.17.142"
+// let serverID="localhost"
 const server='http://'+serverID+':6363/gomoku';
 let isAbled=false;
 let boardCase={

@@ -12,7 +12,8 @@ import (
 	"github.com/gorilla/mux"
 )
 
-var originSource string = "http://localhost:6363/gomoku"
+// var originSource string = "http://localhost:6363/gomoku"
+var originSource string = "http://43.136.17.142:6363/gomoku"
 
 func HandleGame(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", originSource) //避免CORS策略导致浏览器不接受
