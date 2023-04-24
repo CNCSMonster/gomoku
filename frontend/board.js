@@ -108,16 +108,15 @@ document.addEventListener("DOMContentLoaded",()=>{
 });
 
 function resetGame(){
+    if(gameId<0) return;
     //TODO 重新开始游戏，向对方发出申请,通过,
     // 发送申请给远程,这次使用参数,来反馈
     // 1. 创建XMLHttpRequest对象
     const xhr = new XMLHttpRequest();
-
     // 2. 定义请求的参数
     const params = 'gameID='+gameId; // 请求的参数，格式为key=value&key=value
     // 3. 因为init请求具有幂等性，所以使用PUT
     xhr.open('PUT', server +"/game"+ '?' + params, true);
-
     // 4. 忽略请求头部设置
     xhr.onload=function() {
         if(xhr.status===200){
@@ -222,12 +221,31 @@ function play(x,y){
         checkWinner()
     };
     // 发送请求
-    while(!isAbled) ;
-    isAbled=false;
-    xhr.send(JSON.stringify(pos));
-
+    let playinterVal=setInterval(() => {
+        if(!isAbled) return;
+        xhr.send(JSON.stringify(pos));
+        clearInterval(playinterVal);
+    }, 100);
+    
 }
 
+function fetchBoardCase(){
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', server + "/game/" + gameId + "/" + player1ID); // 发送GET请求到服务器，请求数据的API为/api/data
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            boardCase = JSON.parse(xhr.responseText); // 解析服务器返回的json字符串
+        } else {
+            console.error('请求失败，状态码为：' + xhr.status);
+        }
+        isAbled=true;
+    };
+    let playinterVal=setInterval(() => {
+        if(!isAbled) return;
+        xhr.send(JSON.stringify(pos));
+        clearInterval(playinterVal);
+    }, 100);
+}
 
 
 function checkWinner(){
@@ -290,21 +308,7 @@ function refreshUI(){
 }
 
 
-function fetchBoardCase(){
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', server + "/game/" + gameId + "/" + player1ID); // 发送GET请求到服务器，请求数据的API为/api/data
-    xhr.onload = function () {
-        if (xhr.status === 200) {
-            boardCase = JSON.parse(xhr.responseText); // 解析服务器返回的json字符串
-        } else {
-            console.error('请求失败，状态码为：' + xhr.status);
-        }
-        isAbled=true
-    };
-    while(!isAbled) ;
-    isAbled=false;
-    xhr.send();
-}
+
 
 
 
