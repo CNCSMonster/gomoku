@@ -248,12 +248,12 @@ function fetchBoardCase(){
         }
         isAbled=true;
     };
-    let innerTask=(xhr=xhr,pos=pos)=>{
+    let internalTask=(xhr=xhr,pos=pos)=>{
         xhr.send(JSON.stringify(pos))
     }
     let playinterVal=setInterval(() => {
         if(!isAbled) return;
-        innerTask()
+        internalTask()
         clearInterval(playinterVal);
     }, 100);
 }
