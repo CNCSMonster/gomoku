@@ -138,3 +138,4 @@ invalid field found for struct cncsmonster/gomoku/model.ChessBoard's field Steps
 
 1. fix Playable 4.23
 2. 迁移到linux服务器上，通过设置go代理goproxy.cn解决包拉不下的问题
+3. 2023.4.24 增加手动切断时存储数据功能
