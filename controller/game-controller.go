@@ -100,6 +100,7 @@ func HandleEnterGame(w http.ResponseWriter, r *http.Request) {
 		}
 		// 棋盘成功,返回棋盘ID和player1ID
 		w.WriteHeader(http.StatusOK)
+		w.Header().Set("Content-Type", "")
 		fmt.Fprintf(w, "%d-%d", chessboard.ID, player1ID)
 		return
 	}

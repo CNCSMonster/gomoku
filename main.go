@@ -6,6 +6,9 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/gorilla/mux"
 )
@@ -15,11 +18,19 @@ func main() {
 	defer func() {
 		if e := recover(); e != nil {
 			model.SaveAll()
-			fmt.Println("ggg???")
 		}
+	}()
+	go func() {
+		interrupt := make(chan os.Signal, 1)
+		signal.Notify(interrupt, syscall.SIGINT)
+		// 等待接收中断信号
+		<-interrupt
+		model.SaveAll()
+		panic("for SIGINT (CTRL-C)")
 	}()
 	r := mux.NewRouter()
 	router.RegisterGomokuRoutes(r)
 	http.Handle("/gomoku", r)
+	fmt.Println("listen at 6363")
 	log.Fatal(http.ListenAndServe(":6363", r))
 }

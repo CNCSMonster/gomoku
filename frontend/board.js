@@ -62,36 +62,31 @@ document.addEventListener("DOMContentLoaded",()=>{
         const x=Math.floor(i/10);
         const y=i-10*x;
         button.addEventListener('click',()=>{
-            if(!isAbled) return;
-            if(boardCase.curPlayer!==1) return
+            // if(boardCase.curPlayer!==1) return;
             play(x,y);
         });
         button.addEventListener("mouseenter",()=>{
             if(!isAbled) return;
-            if(boardCase.curPlayer!==1) return
+            if(boardCase.curPlayer!==1) return;
             setTimeout(() => {
-                if(boardCase.chesses[x][y]===0)
+                if(boardCase.chesses[x][y]===0){
                     button.innerHTML=backgroundDeepImg;
-                    // boardCase.chesses[x][y]=-1;
+                }
             }, 50);
         });
         button.addEventListener("mouseleave",()=>{
             if(!isAbled) return;
             setTimeout(() => {
-                if(boardCase.chesses[x][y]===0)
-                    button.innerHTML=backgroundDeepImg;
-                    // boardCase.chesses[x][y]=0;
+                if(boardCase.chesses[x][y]===0){
+                    button.innerHTML=backgroundImg;
+                }
             }, 50);
         });
     }
     // 给invite按钮增加方法
-    setInterval(function(){
-        refreshUI();
-    }, 300);
     setInterval(() => {
         if(gameId<0) return;
         fetchBoardCase();
-        checkWinner();
     }, 500);
     inviteButton=document.querySelector(".invite-button");
     inviteButton.addEventListener('click',()=>{
@@ -200,6 +195,10 @@ function play(x,y){
         // storeBoardCase();
         return;
     }
+    if(!isAbled){
+        setTimeout(play(x,y),100);
+        return;
+    }
     // 创建下棋位置对象
     const pos={
         X:x,
@@ -217,27 +216,12 @@ function play(x,y){
             boardCase.chesses[x][y]=boardCase.curPlayer;
             boardCase.curPlayer=boardCase.curPlayer===1?2:1;
             storeBoardCase();
+            refreshUI();
         }
         isAbled=true;
-        checkWinner()
     };
-    // 创建一个函数用来执行任务
-    f=function(xhr){
-        return function(){
-            xhr.send(JSON.stringify(pos))
-        }
-    }
-    innerTask=f(xhr)
-    // 发送请求
-    setTimeout(() => {
-        if(!isAbled){
-            setTimeout(innerTask,100);
-            return;
-        }
-        isAbled=false;
-        innerTask();
-    }, 100);
-    
+    isAbled=false;
+    xhr.send(JSON.stringify(pos));
 }
 
 function fetchBoardCase(){
@@ -245,28 +229,34 @@ function fetchBoardCase(){
     xhr.open('GET', server + "/game/" + gameId + "/" + player1ID); // 发送GET请求到服务器，请求数据的API为/api/data
     xhr.onload = function () {
         if (xhr.status === 200) {
-            boardCase = JSON.parse(xhr.responseText); // 解析服务器返回的json字符串
+            let newBoardCase = JSON.parse(xhr.responseText); // 解析服务器返回的json字符串
+            // 判断旧的boardCase相对新的有没有改变,时间复杂度10*10
+            let ifChanged=false;
+            for(let i=0;i<boardCase.chesses.length&&!ifChanged;i++){
+                for(let j=0;j<boardCase.chesses[i].length;j++){
+                    let newChess=newBoardCase.chesses[i][j];
+                    let old=boardCase.chesses[i][j];
+                    if(old===newChess) continue;
+                    else{
+                        ifChanged=true;
+                        break;
+                    }
+                }
+            }
+            if(newBoardCase.curPlayer!==boardCase.curPlayer) ifChanged=true;
+            if(newBoardCase.winner!==boardCase.winner) ifChanged=true;
+            if(boardCase.curPlayer===1) isAbled=true;
+            if(ifChanged){
+                boardCase=newBoardCase;
+                refreshUI();
+            }
+            checkWinner();
         } else {
             console.log('请求失败，状态码为：' + xhr.status);
         }
-        isAbled=true;
     };
-    // 创建一个函数用来执行任务
-    f=function(xhr){
-        return function(){
-            xhr.send()
-        }
-    }
-    innerTask=f(xhr)
-    // 发送请求
-    setTimeout(() => {
-        if(!isAbled){
-            setTimeout(innerTask,100);
-            return;
-        }
-        isAbled=false;
-        innerTask();
-    }, 100);
+    isAbled=false;
+    xhr.send();
 }
 
 
@@ -286,6 +276,7 @@ function checkWinner(){
             }
         isAbled=false;
     }else if(outcome.innerText!=="Winner:") {
+
         outcome.innerText="Winner:";
     }
 }
@@ -308,7 +299,6 @@ function initBoardCase(){
 
 // 用来定时更新界面
 function refreshUI(){
-    
     // 根据棋盘数据修改界面
     for(let i=0;i<buttons.length;i++){
         const x=Math.floor(i/10);
