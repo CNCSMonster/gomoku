@@ -233,7 +233,8 @@ function play(x,y){
             setTimeout(innerTask,100);
             return;
         }
-        innerTask()
+        isAbled=false;
+        innerTask();
     }, 100);
     
 }
@@ -262,7 +263,8 @@ function fetchBoardCase(){
             setTimeout(innerTask,100);
             return;
         }
-        innerTask()
+        isAbled=false;
+        innerTask();
     }, 100);
 }
 
