@@ -221,16 +221,19 @@ function play(x,y){
         checkWinner()
     };
     // 创建一个函数用来执行任务
-    f=function(xhr=xhr,pos=pos){
-        xhr.send(JSON.stringify(pos))
+    f=function(xhr){
+        return function(){
+            xhr.send(JSON.stringify(pos))
+        }
     }
+    innerTask=f(xhr)
     // 发送请求
     setTimeout(() => {
         if(!isAbled){
-            setTimeout(f,100);
-            return
+            setTimeout(innerTask,100);
+            return;
         }
-        f()
+        innerTask()
     }, 100);
     
 }
@@ -247,16 +250,19 @@ function fetchBoardCase(){
         isAbled=true;
     };
     // 创建一个函数用来执行任务
-    f=function(xhr=xhr){
-        xhr.send()
+    f=function(xhr){
+        return function(){
+            xhr.send()
+        }
     }
+    innerTask=f(xhr)
     // 发送请求
     setTimeout(() => {
         if(!isAbled){
-            setTimeout(f,100);
-            return
+            setTimeout(innerTask,100);
+            return;
         }
-        f()
+        innerTask()
     }, 100);
 }
 
