@@ -200,7 +200,7 @@ function play(x,y){
         return;
     }
     // 创建下棋位置对象
-    let pos={
+    const pos={
         X:x,
         Y:y
     };
@@ -220,10 +220,18 @@ function play(x,y){
         isAbled=true;
         checkWinner()
     };
+    // 创建一个函数闭包
+    function getTaskClosure(passPos,xhr){
+        f=()=>{
+            xhr.send(JSON.stringify(passPos))
+        }
+        return f
+    }
+    let internalTask=getTaskClosure(pos,xhr)    //定义块局变量
     // 发送请求
     let playinterVal=setInterval(() => {
         if(!isAbled) return;
-        xhr.send(JSON.stringify(pos));
+        internalTask()
         clearInterval(playinterVal);
     }, 100);
     
@@ -240,9 +248,12 @@ function fetchBoardCase(){
         }
         isAbled=true;
     };
+    let innerTask=(xhr=xhr,pos=pos)=>{
+        xhr.send(JSON.stringify(pos))
+    }
     let playinterVal=setInterval(() => {
         if(!isAbled) return;
-        xhr.send(JSON.stringify(pos));
+        innerTask()
         clearInterval(playinterVal);
     }, 100);
 }
