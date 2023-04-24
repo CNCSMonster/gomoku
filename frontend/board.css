@@ -1,0 +1,32 @@
+.invite-button :hover{
+    background-color: grey;
+}
+.chess-board {
+    display: grid;
+    align-items: center;
+    width: 570px;
+    height: 570px;
+    column-gap: 0;
+    row-gap: 0;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr
+    1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr
+    1fr 1fr 1fr 1fr 1fr;
+}
+
+.chess-board button {
+    /* height: fit-content; */
+    width: 57px;
+    height: 57px;
+    border-style: solid;
+    z-index: 999;
+    padding: 0;
+    border-width: 1px;
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    margin-right: 0;
+}
+.chess-board button:hover {
+    background-color: grey;
+}

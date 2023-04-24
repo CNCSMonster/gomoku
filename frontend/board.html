@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" type='text/css' href="board.css">
+        <script src="board.js"></script>
+    </head>
+    <body >
+        <div style="
+            display:flex;
+            flex-direction:row;
+            margin-top:0;
+            margin-bottom:0;
+            padding-left:20%;
+            padding-right:20%
+        ">
+            <input id="player-account" placeholder="your account" style="display:inline">
+            <input id="player-password" type="password" placeholder="your password"  style="display:inline">
+            <p id="outcome-area" style="height:100%;width:100px;border-width:1px;border-style:solid;margin-top:0;margin-bottom:0">Winner:</p>
+            <input id="enemy-account" placeholder="enemy's account">
+            <input type="submit"  value="invite" class="invite-button">
+            <input type="submit" value="reset" class="reset-button">
+        </div>
+        
+        <br>
+        <div style="display:flex;flex-direction:row">
+            <div style="flex:1"></div>
+            <div class="chess-board" > 
+            </div>
+            <div style="flex:1"></div>
+        </div>
+    </body>
+</html>
